@@ -48,7 +48,7 @@ int main()
         if (!running){
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
                 running = true;
-                player.SetAccel(At*((player.GetPos()+player.GetRadius())-worldPos));
+                player.SetAccel((5*At)*((player.GetPos()+player.GetRadius())-worldPos));
             }
 
             sf::Vertex line[] =
