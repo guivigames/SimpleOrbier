@@ -90,6 +90,19 @@ int main()
                 sf::Vector2f gCentre = p.GetPos()+p.GetRadius();
                 sf::Vector2f diff = gCentre - (player.GetPos()+player.GetRadius());
                 float h = ((float)pow(pow(diff.x, 2)+pow(diff.y, 2), 0.5));
+                if (h <= p.GetRadius())
+                {
+                        running = false;
+                    player.SetPos(sf::Vector2f{width/4, height/4});
+
+                    planets.clear();
+                    nPlanets = rand() % 20;
+                    for(int i = 0; i < nPlanets; i++)
+                    {
+                        planets.push_back(Planet( sf::Vector2f{rand() %  (width - 60) + 30, rand() % (height - 60) + 30}, rand() % 30));
+                    }
+                    break;
+                }
                 //sf::Vector2f accel = sf::Vector2f{  At*diff.x/h,  At*diff.y/h};
                 //player.SetAccel(player.GetAccel()+((p.GetRadius()/10)*accel));
                 float mass = gGrav*(p.GetRadius() * player.GetRadius())/pow(h,2);
