@@ -14,6 +14,8 @@ TextureManager g_textureManager;
 
 const int width = 1920;
 const int height = 1080;
+const float gGrav = 0.1;
+const float gDiv = 2;
 
 int main()
 {
@@ -23,8 +25,13 @@ int main()
     std::vector<Planet> planets;
     Planet player( sf::Vector2f{width/4, height/4}, 5);
     
-    planets.push_back(Planet( sf::Vector2f{width/3, height/3}, 30));
-    planets.push_back(Planet( sf::Vector2f{3*width/4, 3*height/4}, 30));
+    int nPlanets = rand() % 20;
+    for(int i = 0; i < nPlanets; i++)
+    {
+        planets.push_back(Planet( sf::Vector2f{rand() %  (width - 60) + 30, rand() % (height - 60) + 30}, rand() % 30));
+    }
+    //planets.push_back(Planet( sf::Vector2f{width/3, height/3}, 30));
+    //planets.push_back(Planet( sf::Vector2f{3*width/4, 3*height/4}, 30));
 
 
     bool running = false;
@@ -38,6 +45,21 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
+            if (event.type == sf::Event::KeyPressed)
+            {
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+                {
+                    running = false;
+                    player.SetPos(sf::Vector2f{width/4, height/4});
+
+                    planets.clear();
+                    nPlanets = rand() % 20;
+                    for(int i = 0; i < nPlanets; i++)
+                    {
+                        planets.push_back(Planet( sf::Vector2f{rand() %  (width - 60) + 30, rand() % (height - 60) + 30}, rand() % 30));
+                    }
+                }
+            }
             if (event.type == sf::Event::Closed)
                 window.close();
         }
@@ -47,12 +69,13 @@ int main()
         // convert it to world coordinates.
         sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
 
+
         // Update renderer.
         window.clear();
         if (!running){
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
                 running = true;
-                player.SetAccel((5*At)*((player.GetPos()+player.GetRadius())-worldPos));
+                player.SetAccel(((float)0.0005)*((player.GetPos()+player.GetRadius())-worldPos));
             }
 
             sf::Vertex line[] =
@@ -67,8 +90,11 @@ int main()
                 sf::Vector2f gCentre = p.GetPos()+p.GetRadius();
                 sf::Vector2f diff = gCentre - (player.GetPos()+player.GetRadius());
                 float h = ((float)pow(pow(diff.x, 2)+pow(diff.y, 2), 0.5));
-                sf::Vector2f accel = sf::Vector2f{  At*diff.x/h,  At*diff.y/h};
-                player.SetAccel(player.GetAccel()+((p.GetRadius()/10)*accel));
+                //sf::Vector2f accel = sf::Vector2f{  At*diff.x/h,  At*diff.y/h};
+                //player.SetAccel(player.GetAccel()+((p.GetRadius()/10)*accel));
+                float mass = gGrav*(p.GetRadius() * player.GetRadius())/pow(h,2);
+                sf::Vector2f accel = sf::Vector2f{  At*diff.x*mass,  At*diff.y*mass};
+                player.SetAccel(player.GetAccel()+accel);
                 player.SetPos(player.GetPos() + player.GetAccel());
             }
         }
