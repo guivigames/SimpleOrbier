@@ -100,7 +100,7 @@ int main()
                     for(int i = 0; i < nPlanets; i++)
                     {
                         planets.push_back(Planet( sf::Vector2f{rand() %  (width - 60) + 30, rand() % (height - 60) + 30}, rand() % 30));
-                    }
+                    } 
                     break;
                 }
                 //sf::Vector2f accel = sf::Vector2f{  At*diff.x/h,  At*diff.y/h};
