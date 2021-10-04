@@ -12,17 +12,21 @@ TextureManager g_textureManager;
 
 #include "Planet.hpp"
 
-const int width = 800;
-const int height = 600;
+const int width = 1920;
+const int height = 1080;
 
 int main()
 {
     srand(time(NULL));
     sf::RenderWindow window(sf::VideoMode( width, height), "Oriter");
 
-    Planet planet( sf::Vector2f{width/2, height/2}, 30);
+    std::vector<Planet> planets;
     Planet player( sf::Vector2f{width/4, height/4}, 5);
     
+    planets.push_back(Planet( sf::Vector2f{width/3, height/3}, 30));
+    planets.push_back(Planet( sf::Vector2f{3*width/4, 3*height/4}, 30));
+
+
     bool running = false;
 
     sf::Clock timer;
@@ -59,16 +63,20 @@ int main()
             window.draw(line, 2, sf::Lines);
         }
         else {
-            sf::Vector2f gCentre = planet.GetPos()+planet.GetRadius();
-            sf::Vector2f diff = gCentre - (player.GetPos()+player.GetRadius());
-            float h = ((float)pow(pow(diff.x, 2)+pow(diff.y, 2), 0.5));
-            sf::Vector2f accel = sf::Vector2f{  At*diff.x/h,  At*diff.y/h};
-            player.SetAccel(player.GetAccel()+accel);
-            player.SetPos(player.GetPos() + player.GetAccel());
+            for (auto p : planets){
+                sf::Vector2f gCentre = p.GetPos()+p.GetRadius();
+                sf::Vector2f diff = gCentre - (player.GetPos()+player.GetRadius());
+                float h = ((float)pow(pow(diff.x, 2)+pow(diff.y, 2), 0.5));
+                sf::Vector2f accel = sf::Vector2f{  At*diff.x/h,  At*diff.y/h};
+                player.SetAccel(player.GetAccel()+((p.GetRadius()/10)*accel));
+                player.SetPos(player.GetPos() + player.GetAccel());
+            }
         }
 
         player.Draw(window);
-        planet.Draw(window);
+        for (auto p : planets){
+            p.Draw(window);
+        }
         window.display();
     }
 
