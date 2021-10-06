@@ -10,7 +10,7 @@ Planet::Planet( sf::Vector2f _pos, float _radius)
 
 Planet::~Planet()
 {
-
+    
 }
 
 void Planet::SetPos(sf::Vector2f _pos)
@@ -29,3 +29,11 @@ void Planet::Draw(sf::RenderWindow &window)
     m_shape.setRadius(m_radius);
     window.draw(m_shape);
 }
+
+void Planet::SetTexture(sf::Texture texture)
+{
+    m_texture = texture;
+    m_texture.generateMipmap();
+    m_shape.setTexture(&m_texture);
+}
+

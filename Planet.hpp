@@ -11,6 +11,7 @@ protected:
     sf::Vector2f m_gravity;
     sf::Vector2f m_acceleration;
     sf::CircleShape m_shape;
+    sf::Texture m_texture;
 public:
     Planet( sf::Vector2f _pos, float _radius);
     ~Planet();
@@ -20,7 +21,7 @@ public:
     void SetPos(sf::Vector2f pos);
     void SetAccel(sf::Vector2f accel);
     float GetRadius(){ return m_radius; };
-
+    void SetTexture(sf::Texture texture);
 };
 
 #endif

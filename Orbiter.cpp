@@ -14,22 +14,46 @@ TextureManager g_textureManager;
 
 const int width = 1920;
 const int height = 1080;
-const float gGrav = 0.1;
+const float gGrav = 1;
 const float gDiv = 2;
+
+
+void CreatePlanets(std::vector<Planet> &planets, int& nPlanets, std::vector<std::string> m_textreNames)
+{
+    planets.clear();
+    nPlanets = rand() % 20;
+    std::cout << nPlanets << std::endl;
+    for(int i = 0; i < nPlanets; i++)
+    {
+        planets.push_back(Planet( sf::Vector2f{rand() %  (width - 60) + 30, rand() % (height - 60) + 30}, rand() % 30));
+        planets[i].SetTexture(TheTextureManager::GetTexture(m_textreNames[rand()% m_textreNames.size()]));
+    }
+}
 
 int main()
 {
     srand(time(NULL));
     sf::RenderWindow window(sf::VideoMode( width, height), "Oriter");
 
+    std::vector<std::string> m_textreNames;
+    m_textreNames.push_back("mars.jpg");
+    m_textreNames.push_back("jupiter.jpg");
+    m_textreNames.push_back("neptune.jpg");
+    m_textreNames.push_back("saturn.jpg");
+    m_textreNames.push_back("venus.jpg");
+    m_textreNames.push_back("uranus.jpg");
+
     std::vector<Planet> planets;
     Planet player( sf::Vector2f{width/4, height/4}, 5);
-    
-    int nPlanets = rand() % 20;
-    for(int i = 0; i < nPlanets; i++)
-    {
-        planets.push_back(Planet( sf::Vector2f{rand() %  (width - 60) + 30, rand() % (height - 60) + 30}, rand() % 30));
-    }
+    player.SetTexture(TheTextureManager::GetTexture("mercury.jpg"));
+
+    int nPlanets;// = rand() % 20;
+    //for(int i = 0; i < nPlanets; i++)
+    //{
+    //    planets.push_back(Planet( sf::Vector2f{rand() %  (width - 60) + 30, rand() % (height - 60) + 30}, rand() % 30));
+    //    planets[i].SetTexture(TheTextureManager::GetTexture(m_textreNames[rand()% m_textreNames.size()]));
+    //}
+    CreatePlanets(planets, nPlanets, m_textreNames);
     //planets.push_back(Planet( sf::Vector2f{width/3, height/3}, 30));
     //planets.push_back(Planet( sf::Vector2f{3*width/4, 3*height/4}, 30));
 
@@ -41,6 +65,8 @@ int main()
     {
         sf::Time dt = timer.restart();  ///< Frame rate controller.
         float At = dt.asSeconds();
+        std::string title = std::to_string(At);
+        window.setTitle(title);
         // Catch events.
         sf::Event event;
         while (window.pollEvent(event))
@@ -52,12 +78,7 @@ int main()
                     running = false;
                     player.SetPos(sf::Vector2f{width/4, height/4});
 
-                    planets.clear();
-                    nPlanets = rand() % 20;
-                    for(int i = 0; i < nPlanets; i++)
-                    {
-                        planets.push_back(Planet( sf::Vector2f{rand() %  (width - 60) + 30, rand() % (height - 60) + 30}, rand() % 30));
-                    }
+                    CreatePlanets(planets, nPlanets, m_textreNames);
                 }
             }
             if (event.type == sf::Event::Closed)
@@ -95,12 +116,14 @@ int main()
                         running = false;
                     player.SetPos(sf::Vector2f{width/4, height/4});
 
-                    planets.clear();
-                    nPlanets = rand() % 20;
-                    for(int i = 0; i < nPlanets; i++)
-                    {
-                        planets.push_back(Planet( sf::Vector2f{rand() %  (width - 60) + 30, rand() % (height - 60) + 30}, rand() % 30));
-                    } 
+                    //planets.clear();
+                    //nPlanets = rand() % 20;
+                    //for(int i = 0; i < nPlanets; i++)
+                    //{
+                    //    planets.push_back(Planet( sf::Vector2f{rand() %  (width - 60) + 30, rand() % (height - 60) + 30}, rand() % 30));
+                    //    planets[i].SetTexture(TheTextureManager::GetTexture(m_textreNames[rand()% m_textreNames.size()]));
+                    //}
+                    CreatePlanets(planets, nPlanets, m_textreNames); 
                     break;
                 }
                 //sf::Vector2f accel = sf::Vector2f{  At*diff.x/h,  At*diff.y/h};
